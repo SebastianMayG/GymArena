@@ -1,4 +1,4 @@
-package com.mycompany.gymarena;
+    package com.mycompany.gymarena.conexion;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
