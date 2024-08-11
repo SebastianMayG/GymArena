@@ -91,30 +91,111 @@ public class ClienteDAO implements IClienteDAO
     }
 
     @Override
-    public boolean agregarCliente(Cliente cliente) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean agregarCliente(Cliente cliente) 
+    {
+        PreparedStatement ps;
+        Connection con = Conexion.getConexion();
+        String sql = "INSERT INTO clientes(nombre, apellido, membresia) "
+                + " VALUES(?, ?, ?)";
+        
+        try
+        {
+            ps = con.prepareCall(sql);
+            ps.setString(1,cliente.getNombre());
+            ps.setString(2, cliente.getApellido());
+            ps.setInt(3, cliente.getMembresia());
+            ps.execute();
+            
+            
+            return true;
+        }catch(Exception e )
+        {
+            System.out.println("Error al agregar cliente: " + e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+               con.close();
+            }catch(Exception e)
+            {
+                System.out.println("Error al cerrar conexion " + e.getMessage());
+            }               
+        } 
+        return false;
     }
 
     @Override
-    public boolean modificarCliente(Cliente cliente) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean modificarCliente(Cliente cliente) 
+    {
+        PreparedStatement ps;
+        Connection con = Conexion.getConexion();
+        String sql = "UPDATE clientes SET nombre = ? , apellido = ? , membresia = ? " + 
+                "WHERE clienteId = ?";
+        try
+        {
+            ps = con.prepareCall(sql);
+            ps.setString(1,cliente.getNombre());
+            ps.setString(2, cliente.getApellido());
+            ps.setInt(3, cliente.getMembresia());
+            ps.setInt(4, cliente.getId());
+            ps.execute();
+            
+            return true;
+            
+        }catch(Exception e )
+        {
+            System.out.println("Error al modificar cliente: " + e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+               con.close();
+            }catch(Exception e)
+            {
+                System.out.println("Error al cerrar conexion " + e.getMessage());
+            }               
+        } 
+        return false;
     }
 
     @Override
-    public boolean eliminarCliente(Cliente cliente) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean eliminarCliente(Cliente cliente) 
+    {
+        PreparedStatement ps;
+        Connection con = Conexion.getConexion();
+        String sql = "DELETE FROM clientes WHERE clienteId = ?";
+        
+        try
+        {
+            ps = con.prepareCall(sql);
+            ps.setInt(1,cliente.getId());
+            ps.execute();
+            return true;
+            
+        }catch(Exception e )
+        {
+            System.out.println("Error al eliminar cliente: " + e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+               con.close();
+            }catch(Exception e)
+            {
+                System.out.println("Error al cerrar conexion " + e.getMessage());
+            }               
+        }   
+        return false;
     }
     
     public static void main(String[] args) 
     {
         IClienteDAO clienteDao = new ClienteDAO();
-        
-        /*System.out.println("*** Listar cliente ***");
-        
-        
-        var clientes = clienteDao.ListarClientes();
-        clientes.forEach(System.out::println);
-        */
+ 
+        /* BUSCAR POR ID
         
         Cliente cliente1 = new Cliente(2);
         Boolean encontrado = clienteDao.buscarClientePorId(cliente1);
@@ -123,5 +204,42 @@ public class ClienteDAO implements IClienteDAO
             System.out.println("Cliente encontrado: " + cliente1);
         else
             System.out.println("No se encontro cliente con el ID: " + cliente1.getId());
+        */
+        
+        //AGREGAR CLIENTE
+        /*
+        Cliente nuevoCliente = new Cliente("Daniel", "Gil", 300);
+        boolean agregado = clienteDao.agregarCliente(nuevoCliente);
+        if(agregado)
+            System.out.println("Cliente agregado: " + nuevoCliente);
+        else
+            System.out.println("Error al agregar el nuevo cliente: " + nuevoCliente);
+        */
+        
+        //MODIFICAR CLIENTE
+        /*
+        Cliente modificarCliente = new Cliente(3, "Coco", "Liso",100);
+        boolean modificado = clienteDao.modificarCliente(modificarCliente);
+        if(modificado)
+            System.out.println("Cliente modificado: " + modificarCliente);
+        else
+            System.out.println("Error al modificar el cliente: " + modificarCliente);
+        */
+        
+        //ELIMINAR CLIENTE
+        Cliente clienteEliminar = new Cliente(1);
+        boolean eliminado = clienteDao.eliminarCliente(clienteEliminar);
+        if(eliminado)
+            System.out.println("Cliente: " + clienteEliminar + " eliminado");
+        else
+            System.out.println("Error al eliminar el cliente: " + clienteEliminar);
+        
+        //LISTAR CLIENTES
+        
+        System.out.println("*** Listar cliente ***");
+
+        var clientes = clienteDao.ListarClientes();
+        clientes.forEach(System.out::println);
+        
     }
 }
