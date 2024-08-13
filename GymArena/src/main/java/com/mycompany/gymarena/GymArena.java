@@ -35,19 +35,20 @@ public class GymArena
                                  
                         Ejecute una opcion a realizar:  """);
                 opcion = input.nextInt();
+                input.nextLine(); // Limpia el buffer después de leer el entero
                 
                 switch(opcion)
                 {
-                    case 1: 
-                        input.nextLine();
+                    case 1 -> { 
                         System.out.println("--- Lista de clientes ---");
                         var clientes = clienteDao.ListarClientes();
                         clientes.forEach(System.out::println);
-                    
-                    case 2:
-                        input.nextLine();
+                    }
+                        
+                    case 2 -> {
                         System.out.print("Digite el ID del cliente: ");
                         int id = input.nextInt();
+                        input.nextLine(); // Limpia el buffer después de leer el entero
                         Cliente cliente = new Cliente(id);
                         Boolean encontrado = clienteDao.buscarClientePorId(cliente);
                         
@@ -55,9 +56,9 @@ public class GymArena
                             System.out.println("Cliente encontrado: " + cliente);
                         else
                             System.out.println("No se encontro cliente con el ID: " + cliente.getId());
-                    
-                    case 3:
-                        input.nextLine();
+                    }
+                        
+                    case 3 -> {
                         System.out.println("--- Agregar nuevo cliente ---");
                         
                         System.out.print("Nombre: ");
@@ -68,48 +69,43 @@ public class GymArena
 
                         System.out.print("Membresia: ");
                         int membresia = input.nextInt();
-
-
+                        input.nextLine(); // Limpia el buffer después de leer el entero
+                        
                         Cliente nuevoCliente = new Cliente(nombre, apellido, membresia);
                         boolean agregado = clienteDao.agregarCliente(nuevoCliente);
 
-                        if (agregado) {
+                        if (agregado)
                             System.out.println("Cliente agregado: " + nuevoCliente);
-                        } else {
+                        else
                             System.out.println("Error al agregar el nuevo cliente: " + nuevoCliente);
-                        }
+                    }
  
-                    case 4:
-                        input.nextLine();
+                    case 4 -> {
                         System.out.println("--- Modificar cliente ---");
-                        
                         System.out.print("ID: ");
-                        id = input.nextInt();
-                        
+                        int id = input.nextInt();
+                        input.nextLine(); // Limpia el buffer después de leer el entero
                         System.out.print("Nombre: ");
-                        nombre = input.nextLine();
-                        
+                        String nombre = input.nextLine();
                         System.out.print("Apellido: ");
-                        apellido = input.nextLine();
-
+                        String apellido = input.nextLine();
                         System.out.print("Membresia: ");
-                        membresia = input.nextInt();
-
-
-                        cliente = new Cliente(id, nombre, apellido, membresia);
+                        int membresia = input.nextInt();
+                        input.nextLine(); // Limpia el buffer después de leer el entero
                         
+                        Cliente cliente = new Cliente(id, nombre, apellido, membresia);
                         boolean modificado = clienteDao.modificarCliente(cliente);
-                        
                         if(modificado)
                             System.out.println("Cliente modificado: " + cliente);
                         else
                             System.out.println("Error al modificar el cliente: " + cliente);
+                    }
 
-                    case 5:
-                        input.nextLine();
+                    case 5 -> {
                         System.out.println("--- Eliminar cliente ---");
-                        System.out.print("iD del cliente: ");
-                        id = input.nextInt();
+                        System.out.print("ID del cliente: ");
+                        int id = input.nextInt();
+                        input.nextLine(); // Limpia el buffer después de leer el entero
                         
                         Cliente clienteEliminar = new Cliente(id);
                         boolean eliminado = clienteDao.eliminarCliente(clienteEliminar);
@@ -117,11 +113,21 @@ public class GymArena
                             System.out.println("Cliente: " + clienteEliminar + " eliminado");
                         else
                             System.out.println("Error al eliminar el cliente: " + clienteEliminar);
+                    }
+                        
+                    case 6 -> {
+                        System.out.println("Saliendo del programa...");
+                    }
+                
+                    default -> System.out.println("Opción no válida. Por favor, elija una opción entre 1 y 6.");
                 }
             }catch(Exception e)
             {
-                System.out.println("Error al ejecutar las opciones " + e.getMessage());
+                System.out.println("Error al ejecutar las opciones: " + e.getMessage());
+                input.nextLine(); // Limpia el buffer en caso de error
             }
         }while(opcion != 6);
+        
+        input.close(); // Cierra el scanner al final
     }
 }
